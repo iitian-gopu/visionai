@@ -23,3 +23,27 @@ export const getConversations=async (req,res) => {
         userId:userId
     }).sort({updatedAt:-1})
 
+    return res.status(200).json(conversations)
+  } catch (error) {
+     return res.status(500).json({message:`get conversation error ${error}`})
+  }
+}
+
+export const updateConversation=async (req,res) => {
+  try {
+    const {id,title}=req.body
+    const conversation=await Conversation.findByIdAndUpdate(id,{
+        title
+    })
+
+    return res.status(200).json(conversation)
+  } catch (error) {
+     return res.status(500).json({message:`update conversation error ${error}`})
+  }
+}
+
+export const saveMessage=async (req,res) => {
+    try {
+        const {conversationId,role,content,images,artifacts}=req.body
+        const message=await Message.create({
+            conversationId,
