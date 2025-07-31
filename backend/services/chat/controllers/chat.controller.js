@@ -47,3 +47,27 @@ export const saveMessage=async (req,res) => {
         const {conversationId,role,content,images,artifacts}=req.body
         const message=await Message.create({
             conversationId,
+            content,
+            role,
+            images,
+            artifacts
+        })
+        return res.status(200).json(message)
+    } catch (error) {
+        return res.status(500).json({message:`save message error ${error}`})
+    }
+}
+
+export const getMessages=async (req,res) => {
+    try {
+        
+        const messages=await Message.find({
+            conversationId:req.params.conversationId   
+        })
+        return res.status(200).json(messages)
+    } catch (error) {
+        return res.status(500).json({message:`get messages error ${error}`})
+    }
+}
+
+
