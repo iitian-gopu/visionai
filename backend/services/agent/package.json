@@ -1,0 +1,18 @@
+{
+  "name": "agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start":"node index.js"
+  },
+  "keywords": [],
+  "author": "Gopal Jaiswal <gopaljaiswal20192023@gmail.com>",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1083.0",
+    "@aws-sdk/s3-request-presigner": "^3.1083.0",
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/core": "^1.2.2",
