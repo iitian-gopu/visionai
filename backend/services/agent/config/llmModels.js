@@ -16,3 +16,21 @@ const openrouter=new ChatOpenRouter({
     temperature:0,
     maxTokens:2500
 })
+
+
+export const getModel=async (agent)=>{
+    switch (agent) {
+        case "chat":
+            return groq;
+        case "search" :    
+           return groq;
+        case "coding": 
+           return openrouter; 
+        case "imageAnalyzer": 
+           return gemini;   
+    
+        default:
+            return groq;
+    }
+}
+
