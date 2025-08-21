@@ -23,3 +23,28 @@ export const checkAgentLimit = async (userId, agent) => {
         const minutes = Math.floor(ttl / 60)
         const seconds = (ttl % 60)
         const time = minutes > 0 ? ` ${minutes}m : ${seconds}s` : `${seconds}s`
+
+        const error = new Error(`Rate limit exceeded for ${agent}.`);
+        error.status = 429
+        error.data = {
+            success: false,
+            agent,
+            limit: max,
+            remainingTime: ttl,
+            retryAfter: time,
+            message: `You have reached the ${agent} limit (${max} requests/minute). Try again in ${time}.`
+        }
+
+        throw error
+  
+}
+
+return {
+    remaining: max - count,
+    limit: max
+ 
+}
+  
+
+   
+}
