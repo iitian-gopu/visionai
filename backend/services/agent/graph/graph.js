@@ -21,3 +21,26 @@ workflow.addNode("ppt",pptAgent)
 workflow.addNode("vision",visionAgent)
 workflow.addNode("pdfRag",pdfRag)
 workflow.addNode("imageAnalyzer",imageAnalyzer)
+
+workflow.addEdge("__start__","router")
+workflow.addConditionalEdges("router",(state)=>{
+   switch (state.agent) {
+    case "chat":
+     return "chat";
+    case "search":
+     return "search";
+    case "coding":
+     return "coding";
+    case "pdf":
+     return "pdf";
+    case "ppt":
+     return "ppt";
+    case "vision":
+     return "vision";
+    case "pdfRag":
+     return "pdfRag";
+     case "imageAnalyzer":
+     return "imageAnalyzer";  
+    default:
+     return "chat"
+   }
