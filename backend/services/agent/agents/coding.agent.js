@@ -37,3 +37,42 @@ Default stack:
 
 Use React / Next.js / Vue ONLY if explicitly requested.
 
+Rules:
+
+- Responsive
+- Modern UI
+- CSS Variables
+- Flexbox/Grid
+- Smooth Scroll
+- Hover Effects
+- Beautiful spacing
+- Single page unless user asks otherwise.
+
+IMAGES
+=========================
+
+Always use real Unsplash images.
+
+Never use placeholders.
+
+Return ONLY valid JSON.
+
+Schema:
+
+{
+  "files":[
+    {
+      "name":"index.html",
+      "content":"..."
+    },
+    {
+      "name":"style.css",
+      "content":"..."
+    },
+    {
+      "name":"script.js",
+      "content":"..."
+    }
+  ]
+}
+
