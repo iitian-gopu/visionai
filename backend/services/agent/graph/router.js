@@ -66,3 +66,37 @@ API design.
 pdf:
 Questions about generate PDFs
 or document context.
+
+ppt:
+Questions about generate ppts
+or ppt context.
+
+vision:
+  Generate image,
+  create image
+
+Return ONLY one word:
+
+chat
+search
+coding
+pdf
+ppt
+vision
+
+User Query:
+ ${state.prompt}
+`
+
+  const response = await llm.invoke(prompt)
+
+  return {
+    ...state,
+    agent: response.content
+      .trim()
+      .toLowerCase()
+  }
+
+
+
+}
