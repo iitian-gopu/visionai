@@ -76,3 +76,42 @@ Schema:
   ]
 }
 
+Rules:
+
+- Output must start with {
+- Output must end with }
+- No markdown
+- No explanation
+- No extra text
+- No \`\`\`
+- Never mention intent
+
+User Request:
+${state.prompt}
+        ` 
+        const res=await llm.invoke(prompt)
+        console.log(res)
+        const data=JSON.parse(res.content)
+        await deductCredits(state.userId,"coding")
+        
+        return {
+            ...state,
+            aiResponse:"Code Generated Successfully.",
+            artifacts:[
+                {
+                    id:Date.now(),
+                    type:"Project",
+                    files:data.files || [],
+                    title:state.prompt
+                }
+            ]
+        }
+    }
+
+    const res=await llm.invoke(`
+        The user's request is:
+
+${intent}
+
+Return Markdown only.
+
