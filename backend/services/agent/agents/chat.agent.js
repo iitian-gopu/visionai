@@ -61,3 +61,34 @@ Answer the user using only the above search results.
     history.forEach(msg => {
         if (msg.role == "user") {
             messages.push(new HumanMessage(msg.content))
+        }
+        if (msg.role == "assistant") {
+            messages.push(new AIMessage(msg.content))
+        }
+    });
+
+    messages.push(new HumanMessage(state.prompt))
+
+
+
+
+
+    const response = await llm.invoke(messages)
+      await deductCredits(state.userId,"chat")
+   
+    return {
+        ...state,
+        aiResponse: response.content,
+        
+    }
+    } catch (error) {
+        console.log(error)
+         return {
+            ...state,
+            aiResponse:error?.data?.message || "failed to generate chat"
+        }
+        
+    
+    }
+   
+}
