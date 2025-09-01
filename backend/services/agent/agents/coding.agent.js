@@ -115,3 +115,42 @@ ${intent}
 
 Return Markdown only.
 
+Never generate project files.
+
+Use headings like:
+
+# Overview
+
+## Explanation
+
+## Problems
+
+## Improvements
+
+## Best Practices
+
+## Optimized Code (if needed)
+
+User Request:
+
+${state.prompt}
+        `)
+
+   const data=res.content   
+   await deductCredits(state.userId,"coding")
+   
+   return {
+    ...state,
+    aiResponse:data,
+    artifacts:[]
+   }  
+} catch (error) {
+   console.log(error)
+         return {
+            ...state,
+            aiResponse:error?.data?.message || "failed to generate code",
+            artifacts:[]
+        }
+}
+  
+}
