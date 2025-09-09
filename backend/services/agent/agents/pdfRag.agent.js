@@ -25,3 +25,29 @@ export const pdfRag=async (state)=>{
       const docs=await spilliter.createDocuments([text])
       const collectionName=`pdf-${Date.now()}`;
       const store=await vectorStore(docs,collectionName)
+
+      const relevantDocs=await store.similaritySearch(state.prompt,5)
+      
+      const context=relevantDocs.map(d=>d.pageContent).join("\n\n")
+      
+      const llm=await getModel("pdf-rag")
+
+       const messages=[
+        new SystemMessage(`You are CortexAI PDF Assistant.
+
+Rules:
+
+- Answer ONLY from the uploaded PDF.
+
+- Never make up information.
+
+- If the answer is not present in the PDF, reply:
+
+"I couldn't find this information in the uploaded PDF."
+
+- Use Markdown formatting.
+`),
+
+new HumanMessage(`
+    Context:${context}
+     Question:${state.prompt}
