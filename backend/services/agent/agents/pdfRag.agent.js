@@ -51,3 +51,29 @@ Rules:
 new HumanMessage(`
     Context:${context}
      Question:${state.prompt}
+    `)
+       ]
+
+
+      const response=await llm.invoke(messages)
+      await deductCredits(state.userId,"pdf")
+      console.log(response)
+      return {
+        ...state,
+        aiResponse:response.content
+      }
+
+
+
+   } catch (error) {
+    console.log(error)
+         return {
+            ...state,
+            aiResponse:error?.data?.message || "failed to analyze pdf"
+        }
+   }finally{
+         fs.unlinkSync(state.file.path)
+   }
+
+
+}
