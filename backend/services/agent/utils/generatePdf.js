@@ -26,3 +26,31 @@ doc
   .fillColor("#111827")
 
   if(data.subtitle){
+    doc.moveDown(0.5)
+  }
+
+  //subtitle
+
+  doc
+  .fontSize(12)
+  .text(data.subtitle,{
+    align:"center"
+  })
+  .fillColor("#6B7280")
+
+
+  doc.moveDown(2)
+
+  //sections
+
+  data?.sections?.forEach(s => {
+
+  doc
+  .fontSize(18)
+  .text(s.heading)
+  .fillColor("#111827")
+
+  doc.moveDown(0.5)
+
+  s?.points?.forEach((p)=>{
+     
