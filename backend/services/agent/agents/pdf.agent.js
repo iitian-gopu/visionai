@@ -23,3 +23,27 @@ Structure:
 
 {
 "title":"",
+"subtitle":"",
+"sections":[
+{
+"heading":"",
+"points":[]
+}
+]
+}
+
+Generate 4-8 sections.
+
+Each section should have 3-6 concise bullet points.
+
+Topic:
+
+${state.prompt}
+        `
+
+        const res=await llm.invoke(prompt)
+        const data=JSON.parse(res.content)
+       await deductCredits(state.userId,"pdf")
+        
+        const pdfBuffer=await generatePdf(data)
+
