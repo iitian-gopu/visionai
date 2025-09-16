@@ -25,3 +25,30 @@ Format:
 "",
 "",
 ""
+]
+}
+]
+}
+
+Rules:
+
+- Generate exactly 6 content slides.
+- Each slide should have 4-6 concise bullet points.
+- No markdown.
+- No explanation.
+- No code block.
+- Return ONLY JSON.
+
+Topic:
+
+${state.prompt}`
+
+const res=await llm.invoke(prompt)
+const data=JSON.parse(res.content)
+await deductCredits(state.userId,"ppt")
+const ppt=await generatePpt(data)
+const buffer=await ppt.write({
+    outputType:"nodebuffer"
+})
+
+const filename=`ppt-${Date.now()}.pptx`
