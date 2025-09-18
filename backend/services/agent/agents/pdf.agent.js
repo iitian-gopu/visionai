@@ -47,3 +47,27 @@ ${state.prompt}
         
         const pdfBuffer=await generatePdf(data)
 
+        const filename=`pdf-${Date.now()}.pdf`
+        await uploadToS3(filename,pdfBuffer,"application/pdf")
+
+        const downloadUrl=await getFromS3(filename,24*60)
+
+        return {
+          ...state,
+          aiResponse:`# PDF Generated
+
+**${data.title}**
+
+📥 [Download PDF](${downloadUrl})
+
+_Link expires in 10 minutes._`
+        }
+
+    } catch (error) {
+       console.log(error)
+         return {
+            ...state,
+            aiResponse:error?.data?.message || "failed to generate pdf"
+        }
+    }
+}
