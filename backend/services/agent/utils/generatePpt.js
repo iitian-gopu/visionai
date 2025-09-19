@@ -91,3 +91,49 @@ const addCover = (ppt, data) => {
         h: 0.2,
         align: "center",
         color: "BFDBFE",
+        fontSize: 10,
+    })
+}
+
+function addContentSlide(
+    ppt,
+    title,
+    points,
+    page,
+    total
+) {
+    const slide = ppt.addSlide();
+
+    slide.background = {
+        color: COLORS.white,
+    };
+
+    slide.addText(title, {
+        x: 0.6,
+        y: 0.35,
+        w: 10,
+        h: 0.4,
+        fontSize: 24,
+        bold: true,
+        color: COLORS.primary,
+    });
+
+    slide.addShape(ppt.ShapeType.line, {
+        x: 0.6,
+        y: 0.85,
+        w: 12,
+        h: 0,
+        line: {
+            color: COLORS.border,
+            width: 1.2,
+        },
+    });
+
+    const visiblePoints = points.slice(0, 6);
+
+    visiblePoints.forEach((point, i) => {
+        const y = 1.2 + i * 0.75;
+
+        slide.addShape(ppt.ShapeType.roundRect, {
+            x: 0.7,
+            y,
