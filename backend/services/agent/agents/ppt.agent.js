@@ -52,3 +52,29 @@ const buffer=await ppt.write({
 })
 
 const filename=`ppt-${Date.now()}.pptx`
+
+await uploadToS3(filename,buffer,"application/vnd.openxmlformats-officedocument.presentationml.presentation")
+const downloadUrl=await getFromS3(filename,24*60*60)
+
+return {
+    ...state,
+    aiResponse:`# ✅ Presentation Generated
+
+**${data.title}**
+
+📥 [Download PPT](${downloadUrl})
+
+_Link expires in 10 minutes._`
+}
+
+    } catch (error) {
+        console.log(error)
+         return {
+            ...state,
+            aiResponse:error?.data?.message || "failed to generate ppt"
+        }
+       
+
+       
+    }
+}
