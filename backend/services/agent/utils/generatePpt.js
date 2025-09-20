@@ -137,3 +137,49 @@ function addContentSlide(
         slide.addShape(ppt.ShapeType.roundRect, {
             x: 0.7,
             y,
+            w: 12,
+            h: 0.58,
+            fill: {
+                color: i % 2 ? "F8FAFC" : "EFF6FF",
+            },
+            line: {
+                color: COLORS.border,
+            },
+            radius: 0.08,
+        });
+
+        slide.addShape(ppt.ShapeType.ellipse, {
+            x: 0.92,
+            y: y + 0.18,
+            w: 0.12,
+            h: 0.12,
+            fill: {
+                color: COLORS.primary,
+            },
+            line: {
+                color: COLORS.primary,
+            },
+        });
+
+        slide.addText(point, {
+            x: 1.2,
+            y: y + 0.08,
+            w: 11,
+            h: 0.35,
+            fontSize: 15,
+            color: COLORS.text,
+            fit: "shrink",
+        });
+    });
+
+    slide.addText(`${page}/${total}`, {
+        x: 12.1,
+        y: 6.9,
+        w: 0.8,
+        h: 0.2,
+        align: "right",
+        fontSize: 10,
+        color: COLORS.muted,
+    });
+
+    slide.addText(`CortexAI`, {
