@@ -21,3 +21,25 @@ Rules:
 - Analyze only the uploaded image.
 - Answer the user's question accurately.
 - If text exists in the image, extract it.
+- If charts or tables exist, explain them.
+- If something is unclear, say so.
+- Use Markdown when helpful.
+- Do not hallucinate.
+`
+            ),
+            new HumanMessage(
+                {
+                    content: [
+                        {
+                            type: "text",
+                            text: state.prompt || "analyze the image"
+                        },
+                        {
+                            type:"image_url",
+                            "image_url":{
+                                url:`data:${state.file.mimetype};base64,${base64Image}`
+                            }
+                        }
+                    ]
+                }
+
