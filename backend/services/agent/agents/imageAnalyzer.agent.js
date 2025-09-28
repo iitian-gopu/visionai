@@ -43,3 +43,25 @@ Rules:
                     ]
                 }
 
+            )
+        ]
+
+const response=await llm.invoke(messages)
+ await deductCredits(state.userId,"vision")
+return {
+    ...state,
+    aiResponse:response.content
+}
+
+    } catch (error) {
+       console.log(error)
+         return {
+            ...state,
+            aiResponse:error?.data?.message || "failed to analyze image"
+        
+}
+    }
+    finally{
+      await fs.unlink(state.file.path)
+    }
+}
