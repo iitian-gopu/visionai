@@ -23,3 +23,27 @@ export const createOrder = async (req, res) => {
             userId,
             orderId: order.id,
             amount: selectedPlan.amount,
+            credits: selectedPlan.credits,
+            plan: selectedPlan.id,
+            currency: order.currency,
+            status: "created"
+        })
+
+        return res.status(200).json({ order, plan: selectedPlan })
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: `create order error ${error}` })
+    }
+}
+
+
+export const verifyPayment = async (req,res) => {
+    try {
+        const {razorpay_order_id, razorpay_payment_id,razorpay_signature} = req.body
+
+        const generateSignature=crypto
+                               .createHmac("sha256",process.env.RAZORPAY_KEY_SECRET)
+                               .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+                               .digest("hex")
