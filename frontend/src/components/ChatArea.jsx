@@ -17,3 +17,21 @@ function ChatArea() {
 const data=await getMessages(selectedConversation?._id)
 console.log(data)
       dispatch(setMessages(data))
+      const latestArtifactMessage=[...data].reverse().find(msg=>msg.artifacts && msg.artifacts.length>0)
+      dispatch(setArtifacts(latestArtifactMessage?.artifacts || []))
+    }
+    
+  }
+
+  getMesg()
+  },[selectedConversation?._id])
+  return (
+    <div className='flex-1 flex flex-col min-w-0'>
+      <Nav/>
+      <MessageList/>
+      <ChatInput/>
+    </div>
+  )
+}
+
+export default ChatArea
