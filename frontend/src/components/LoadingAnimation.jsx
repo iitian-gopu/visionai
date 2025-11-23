@@ -26,3 +26,31 @@ function LoadingAnimation() {
                             animate={{ scale: 1.7, opacity: 0 }}
                             transition={{
                                 duration: 1.8,
+                                repeat: Infinity,
+                                delay,
+                                ease: "easeOut",
+                            }}
+
+                        />
+                    ))
+                }
+
+                <motion.span
+                    className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-cyan-300 to-violet-400"
+                    style={{ boxShadow: "0 0 14px rgba(125,211,252,0.55)" }}
+                    animate={{ scale: [1, 1.25, 1] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+
+
+                />
+            </div>
+            <div className='flex overflow-hidden'>
+                <AnimatePresence mode='wait'>
+                    <motion.div
+                        key={label}
+                        className="flex"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                    >
