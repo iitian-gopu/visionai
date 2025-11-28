@@ -71,3 +71,39 @@ function BillingDrawer({ open, onClose }) {
                     </div>
 
 
+                    <div className='p-5'>
+                        <div className='rounded-xl bg-white/[0.04] border border-white/10 p-4'>
+                            <div className='flex justify-between items-center'>
+                                <div>
+                                    <p className='text-slate-400 text-sm'>
+                                        Current Plan
+                                    </p>
+                                    <h3 className='text-white text-xl font-bold'>
+                                        {userData?.plan || "free"}
+                                    </h3>
+                                </div>
+                                <Crown className='text-yellow-400' />
+                            </div>
+
+                            <div className='mt-5'>
+                                <div className='flex justify-between text-xs text-slate-400 mb-2'>
+                                    <span>Credits</span>
+                                    <span>{userData.credits || 0}/{userData.totalCredits || 100}</span>
+                                </div>
+
+                                <div className='h-2 rounded-full bg-white/10 overflow-hidden'>
+                                    <div className="h-full bg-indigo-500 transition-all duration-500"
+                                        style={{
+                                            width: `${(
+                                                (userData?.credits || 0) /
+                                                (userData?.totalCredits || 1)
+                                            ) * 100
+                                                }%`
+                                        }}
+                                    />
+                                </div>
+
+
+                            </div>
+
+
