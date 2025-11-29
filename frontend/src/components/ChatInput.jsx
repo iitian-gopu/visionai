@@ -106,3 +106,56 @@ function ChatInput() {
     dispatch(addMessage({ role: "assistant", content: data?.answer, images: data?.images }))
     console.log(data)
   }
+
+  const agents = [
+    {
+      id: "auto",
+      icon: Zap,
+      label: "Auto"
+    },
+
+    {
+      id: "chat",
+      icon: MessageSquare,
+      label: "Chat"
+    },
+
+    {
+      id: "coding",
+      icon: Code2,
+      label: "Coding"
+    },
+
+    {
+      id: "pdf",
+      icon: FileText,
+      label: "PDF"
+    },
+
+    {
+      id: "ppt",
+      icon: Presentation,
+      label: "PPT"
+    },
+
+    {
+      id: "vision",
+      icon: ImageIcon,
+      label: "Vision"
+    },
+
+    {
+      id: "search",
+      icon: Globe,
+      label: "Search"
+    }
+
+  ]
+
+  return (
+    <div className='w-full overflow-hidden px-3 md:px-5 py-4 border-t border-white/[0.06] bg-[#0d0f14]'>
+      <div className='flex flex-col gap-2 bg-white/[0.03] border border-white/[0.07] rounded-2xl px-4 pt-3.5 pb-3'>
+
+        <div className='flex w-[80%] gap-2 pr-2 flex-wrap'>
+          {agents.map((agent) => {
+            const isActive = selectedAgent === agent.label
