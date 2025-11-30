@@ -54,3 +54,31 @@ function LoadingAnimation() {
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
                     >
+                        {
+                            label.split("").map((ch, i) => (
+                                <motion.div
+                                    key={i}
+                                    className="text-[13px] font-medium tracking-wide text-slate-400"
+                                    animate={{ opacity: [0.3, 1, 0.3] }}
+                                    transition={{
+                                        duration: 1.4,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                        delay: i * 0.07,
+                                    }}
+
+                                >
+                                    {ch}
+                                </motion.div>
+                            ))
+                        }
+
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+        </div>
+    )
+}
+
+export default LoadingAnimation
