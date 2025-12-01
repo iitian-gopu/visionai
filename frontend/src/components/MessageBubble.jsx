@@ -80,3 +80,44 @@ function MessageBubble({ role, content, images }) {
 
               <th className='border border-white/10 bg-white/5 px-3 py-2 text-left'>
                 {children}
+              </th>
+
+            ),
+            td: ({ children }) => (
+
+              <td className='border border-white/10 px-3 py-2'>
+                {children}
+              </td>
+
+            ),
+
+            a: ({ href, children }) => (
+
+              <a href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-400 underline inline-flex items-center gap-1"
+              >
+                {children}
+                <ExternalLink size={14} />
+              </a>
+
+            ),
+            code: ({ className, children }) => {
+              const value = String(children).trim()
+              
+
+              if (!className) {
+                return (
+                  <code className='px-1.5 py-0.5 rounded bg-white/10 text-indigo-200'>
+                    {value}
+                  </code>
+                )
+
+              }
+
+              const language = className.replace("language-", "")
+
+              return (
+                <div className='my-4 overflow-hidden rounded-xl border border-white/10 bg-[#111318]'>
+                  <div className='flex items-center justify-between bg-[#1b1d24] border-b border-white/10 px-4 py-2'>
