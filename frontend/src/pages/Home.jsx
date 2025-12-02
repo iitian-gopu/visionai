@@ -82,3 +82,45 @@ function Home() {
         dispatch(setUserdata(data));
 
         return;
+      } catch (error) {
+        console.log(
+          `Login attempt ${attempt} failed`,
+          error
+        );
+
+        if (attempt === 3) {
+          throw error;
+        }
+
+        await sleep(4000);
+      }
+    }
+  };
+
+  const googleLogin = async () => {
+    try {
+      setLoginLoading(true);
+
+      const data = await signInWithPopup(
+        auth,
+        googleProvider
+      );
+
+      const token = await data.user.getIdToken();
+
+      await handleLogin(token);
+    } catch (error) {
+      console.log("Google login error:", error);
+
+      alert(
+        "Login failed. Backend may still be starting. Please try again."
+      );
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  return (
+    <div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
+      <SideBar />
+
