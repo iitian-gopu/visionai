@@ -144,3 +144,52 @@ function Artifact() {
                 </button>
               ))
             }
+          </div>}
+
+
+          <div className='flex-1 overflow-hidden'>
+            {(tab == "preview" && canPreview) ? <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className='w-full h-full'
+            >
+              <iframe title='preview' srcDoc={previewDoc} sandbox='allow-scripts' className='w-full h-full bg-white' />
+            </motion.div>
+              :
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className='w-full h-full'
+              >
+                <Editor
+                  theme='vs-dark'
+                  language={detectLanguage(file?.name)}
+                  value={file?.content}
+                  options={{ readOnly: true, minimap: { enabled: false }, fontSize: 13, wordWrap: "on", automaticLayout: true, scrollBeyondLastLine: false, padding: { top: 16 }, lineNumbers: "on", renderLineHighlight: "none" }}
+
+                />
+
+              </motion.div>
+            }
+
+          </div>
+
+
+        </div> :
+          <div className='hidden lg:flex h-full border-l border-white/[0.06] bg-[#0d0f14] flex-col items-center py-4 gap-3 shrink-0'>
+            <button className='flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer shrink-0' onClick={() => setCollapsed(false)}>
+              <PanelRightOpen size={16} />
+            </button>
+            <div className='flex items-center gap-2 flex-1 min-w-0'>
+              <div
+                className='text-[10px] font-medium text-slate-600 tracking-widest uppercase whitespace-nowrap'
+                style={{
+                  writingMode: "vertical-lr",
+                  transform: "rotate(180deg)"
+                }}
+              >{artifacts[0]?.title}</div>
+            </div>
+          </div>}
+      </>
