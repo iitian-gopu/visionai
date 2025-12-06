@@ -159,3 +159,57 @@ function ChatInput() {
         <div className='flex w-[80%] gap-2 pr-2 flex-wrap'>
           {agents.map((agent) => {
             const isActive = selectedAgent === agent.label
+            const Icon = agent.icon
+            return (
+              <div
+                onClick={() => setSelectedAgent(agent.label)}
+                className={`
+            flex-shrink-0
+            cursor-pointer
+            inline-flex
+            items-center
+            gap-1.5
+            px-3
+            py-2
+            rounded-full
+            text-xs
+            font-medium
+            border
+            transition-all
+
+            ${isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-violet-600 text-white border-transparent shadow-[0_1px_8px_rgba(99,102,241,.35)]"
+                    : "bg-white/[0.03] text-slate-400 border-white/[0.06] hover:bg-white/[0.07]"
+                  }
+          `}>
+
+                <Icon size={14}
+                  className={
+                    isActive
+                      ? "text-white"
+                      : "text-slate-500"
+                  } />
+
+                {agent.label}
+
+              </div>
+            )
+
+          })}
+        </div>
+
+        {
+          selectedFile && <div className='my-3'>
+
+            <div className='inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2'>
+              {
+                selectedFile?.type === "application/pdf" ? <FileText size={16}
+
+                  className="text-red-400"
+                /> : selectedFile.type.startsWith("image/") && <img src={URL.createObjectURL(selectedFile)} className="h-10 w-10 rounded-xl object-cover mt-3"
+                />
+              }
+
+              <div>
+                <p className='text-xs text-white'>
+                  {selectedFile?.name}
