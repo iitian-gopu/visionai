@@ -121,3 +121,44 @@ function MessageBubble({ role, content, images }) {
               return (
                 <div className='my-4 overflow-hidden rounded-xl border border-white/10 bg-[#111318]'>
                   <div className='flex items-center justify-between bg-[#1b1d24] border-b border-white/10 px-4 py-2'>
+                    <span className='uppercase text-xs text-slate-400'>
+                      {language}
+                    </span>
+                    <button className='flex items-center gap-1 text-xs' 
+                    onClick={() => copyCode(value)}>
+                      {
+                        copiedCode == value ?
+                          <>
+                            <Check size={14}/>
+                            Copied
+                          </> :
+                          <><Copy size={14} />Copy</>
+                      }
+                    </button>
+                  </div>
+
+
+                  <SyntaxHighlighter
+                    language={language}
+                    style={oneDark}
+                    wrapLongLines
+                    showLineNumbers
+                    customStyle={{
+                      margin: 0,
+                      padding: "16px",
+                      background: "#0d1117",
+                      fontSize: "13px",
+                    }}
+
+                  >
+                    {value}
+                  </SyntaxHighlighter>
+
+
+                </div>
+              )
+            },
+          img:({src})=>{
+            if(!src)return null;
+            return (
+              <img
