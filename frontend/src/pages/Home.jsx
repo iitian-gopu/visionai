@@ -124,3 +124,45 @@ function Home() {
     <div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
       <SideBar />
 
+      <ChatArea />
+
+      <Artifact />
+
+      {!userData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur">
+          <div className="w-[340px] bg-[#13151c] border border-white/[0.08] rounded-2xl p-7 flex flex-col gap-5">
+
+            <div className="flex flex-col gap-1">
+              <h2 className="text-[17px] font-semibold text-slate-100 tracking-tight">
+                Welcome to VisionAI
+              </h2>
+
+              <p className="text-[13px] text-slate-500">
+                {warming
+                  ? "Starting VisionAI servers. First load may take around 1 minute..."
+                  : "Please login to continue using the app."}
+              </p>
+            </div>
+
+            <button
+              className="w-full flex items-center justify-center gap-3 py-[11px] rounded-xl text-sm font-medium text-black/90 bg-white hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 cursor-pointer"
+              onClick={googleLogin}
+              disabled={warming || loginLoading}
+            >
+              <FcGoogle size={15} />
+
+              {warming
+                ? "Starting VisionAI..."
+                : loginLoading
+                ? "Signing in..."
+                : "Continue With Google"}
+            </button>
+
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Home;
