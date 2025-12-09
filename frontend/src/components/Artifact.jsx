@@ -193,3 +193,51 @@ function Artifact() {
             </div>
           </div>}
       </>
+    )
+  }
+
+
+
+
+
+  return (
+    <>
+
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed bottom-24 right-4 z-40 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[12px] font-medium shadow-lg shadow-indigo-500/20 border-none cursor-pointer transition-colors duration-150"
+
+      >
+        <Code2 size={13} />
+        View Code
+      </button>
+      <AnimatePresence>
+        {mobileOpen && <>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} onClick={() => setMobileOpen(false)} className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />
+
+          <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: 0.25, ease: "easeInOut" }} className="lg:hidden fixed inset-y-0 right-0 z-50 w-[88vw] max-w-[420px] border-l border-white/[0.06] overflow-hidden">
+            <PanelContent onClose={()=>setMobileOpen(false)}/>
+          </motion.div>
+
+        </>
+        }
+
+      </AnimatePresence>
+
+
+      <motion.div
+        initial={{ width: 400 }}
+        animate={{ width: collapsed ? 48 : 400 }}
+        transition={{
+          duration: 0.25,
+          ease: easeInOut
+        }}
+        className='hidden lg:flex h-full border-l border-white/[0.06] flex-col overflow-hidden shrink-0 '>
+
+        <PanelContent />
+      </motion.div>
+    </>
+  )
+}
+
+export default Artifact
