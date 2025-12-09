@@ -213,3 +213,56 @@ function ChatInput() {
               <div>
                 <p className='text-xs text-white'>
                   {selectedFile?.name}
+                </p>
+                <p className='text-[10px] text-slate-500'>
+                  {Math.ceil(selectedFile.size)}KB
+                </p>
+
+              </div>
+              <button className='ml-2' onClick={() => { setSelectedFile(null); fileRef.current.value = "" }}><X size={14} className='text-slate-500 hover:text-white' /></button>
+            </div>
+
+
+          </div>
+        }
+
+
+        <textarea
+          placeholder='Ask Anything...'
+          onChange={(e) => setValue(e.target.value)}
+          value={value}
+          className="w-full bg-transparent outline-none resize-none text-[14px] text-slate-200 placeholder:text-slate-600 leading-relaxed [scrollbar-width:none] [&::-webkit-scrollbar]:hidden disabled:opacity-50"
+          rows={3}
+        />
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-1'>
+
+            <input type="file" accept='.pdf,image/*' hidden ref={fileRef} onChange={(e) => {
+              const file = e.target.files[0]
+              if (file) {
+                setSelectedFile(file)
+              }
+            }} />
+
+            <button className='flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-400 hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer' onClick={() => fileRef.current.click()}>
+              <Paperclip size={16} />
+            </button>
+            <button
+              onClick={toggleMic}
+              className={`flex items-center justify-center w-8 h-8 rounded-lg  transition-all duration-150 cursor-pointer ${listening ?"bg-red-500 text-white":"text-slate-600 hover:bg-white/[0.05]" }`}>
+             {listening?<Mic size={16} />:<MicOff size={16}/>} 
+            </button>
+          </div>
+          <button
+            disabled={!value && isLoading}
+            onClick={handleSendMessage}
+            className={`flex items-center justify-center w-8 h-8 rounded-lg border-none cursor-pointer transition-all duration-150 ${value.trim() ? "bg-linear-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white" : "bg-white/[0.05] text-slate-600 cursor-not-allowed"}`}>
+          <Send size={15} />
+        </button>
+      </div>
+    </div>
+    </div >
+  )
+}
+
+export default ChatInput
