@@ -162,3 +162,44 @@ function MessageBubble({ role, content, images }) {
             if(!src)return null;
             return (
               <img
+                src={src}
+                onClick={() => setLightBox(src)}
+                loading="lazy"
+                onError={(e) => e.currentTarget.remove()}
+                className="w-40 h-28 rounded-xl object-cover border border-white/10 cursor-zoom-in hover:opacity-90 transition"
+              />
+            )
+          }
+
+
+
+
+
+          }}
+        >
+          {content}
+        </Markdown>
+
+
+
+      </div>
+      {lightBox &&
+        <div className='fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6'>
+          <button
+            className='absolute top-5 right-5 text-white/80 hover:text-white bg-white/10 rounded-full p-2'
+            onClick={() => setLightBox(null)}
+          >
+            <X />
+          </button>
+          <img
+            src={lightBox}
+            className="max-w-[90vw] max-h-[85vh] rounded-2xl border border-white/10 shadow-2xl object-contain"
+
+          />
+
+        </div>}
+    </div>
+  )
+}
+
+export default MessageBubble
