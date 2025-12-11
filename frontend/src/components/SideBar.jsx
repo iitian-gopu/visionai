@@ -198,3 +198,53 @@ function SideBar() {
                                             onError={() => setImageError(true)} />
                                         :
                                         <div className='w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center'>
+                                            <User size={15} className="text-slate-400" />
+                                        </div>
+
+                                }
+
+                            </div>
+                            <div className='flex-1 min-w-0'>
+                                <p className='text-[13.5px] font-semibold text-slate-100 truncate'>{userData?.name || "user"}</p>
+                                <p className='text-[11px] text-slate-600 mt-px'>{`${userData?.plan}` || "free plan"} </p>
+                            </div>
+                            <div className='flex gap-1'>
+                                <button 
+                                onClick={()=>setShowBilling(true)}
+                                className='flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150'>
+                                    <Coins size={16} />
+                                </button>
+                                <button className='flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-slate-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150'
+                                    onClick={() => {
+                                        logOut();
+                                        dispatch(setUserdata(null))
+                                    }}
+                                >
+                                    <LogOut size={16} />
+                                </button>
+                            </div>
+                        </div>)
+                        :
+                        <button className='w-full flex items-center justify-center gap-2 text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08] rounded-xl py-[11px] cursor-pointer hover:bg-white/[0.08] transition-colors duration-150'>
+                            Login
+                        </button>}
+                </div>
+            </div>
+
+        </div>
+
+        
+           <BillingDrawer
+           open={showBilling}
+           onClose={()=>setShowBilling(false)}
+           />
+
+        </>
+    )
+
+
+
+
+}
+
+export default SideBar
