@@ -1,0 +1,44 @@
+name: vision ai deployment
+
+on:
+ push:
+   branches:
+     - main
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }} 
+
+jobs: 
+
+  deploy-backend:
+     runs-on: ubuntu-latest 
+     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ${{env.AWS_REGION}}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Gateway
+        run: |
+          docker build -f backend/gateway/Dockerfile -t gateway backend 
+
+      - name: tag Gateway
+        run: |
+          docker tag gateway:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gateway:latest
+
+      - name: push Gateway 
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gateway:latest  
+
+
+
