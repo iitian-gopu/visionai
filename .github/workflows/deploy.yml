@@ -42,3 +42,46 @@ jobs:
 
 
 
+
+      - name: Build Auth 
+        run: |
+          docker build -f backend/services/auth/Dockerfile -t auth-service backend 
+
+      - name: tag auth
+        run: |
+          docker tag auth-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/auth-service:latest
+
+      - name: push auth 
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/auth-service:latest 
+
+
+
+      - name: Build Chat 
+        run: |
+          docker build -f backend/services/chat/Dockerfile -t chat-service backend 
+
+      - name: tag chat
+        run: |
+          docker tag chat-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/chat-service:latest
+
+      - name: push chat 
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/chat-service:latest
+
+
+
+      - name: Build agent 
+        run: |
+          docker build -f backend/services/agent/Dockerfile -t agent-service backend 
+
+      - name: tag agent
+        run: |
+          docker tag agent-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/agent-service:latest
+
+      - name: push agent 
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/agent-service:latest
+
+
+
