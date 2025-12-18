@@ -85,3 +85,47 @@ jobs:
 
 
 
+
+      - name: Build billing 
+        run: |
+          docker build -f backend/services/billing/Dockerfile -t billing-service backend 
+
+      - name: tag billing
+        run: |
+          docker tag billing-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/billing-service:latest
+
+      - name: push billing 
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/billing-service:latest  
+
+
+      - name: deploy gateway
+        run: |
+          aws ecs update-service \
+          --cluster ${{secrets.ECS_CLUSTER}} \
+          --service ${{secrets.GATEWAY_SERVICE}} \
+          --force-new-deployment
+
+
+      - name: deploy auth
+        run: |
+          aws ecs update-service \
+          --cluster ${{secrets.ECS_CLUSTER}} \
+          --service ${{secrets.AUTH_SERVICE}} \
+          --force-new-deployment
+
+      - name: deploy chat
+        run: |
+          aws ecs update-service \
+          --cluster ${{secrets.ECS_CLUSTER}} \
+          --service ${{secrets.CHAT_SERVICE}} \
+          --force-new-deployment          
+
+
+      - name: deploy agent
+        run: |
+          aws ecs update-service \
+          --cluster ${{secrets.ECS_CLUSTER}} \
+          --service ${{secrets.AGENT_SERVICE}} \
+          --force-new-deployment
+
