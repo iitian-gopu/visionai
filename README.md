@@ -171,3 +171,175 @@ POST /api/agent/chat
 the request reaches the Agent Service.
 
 The request contains information such as:
+
+```text
+prompt
+conversationId
+agent
+file
+userId
+```
+
+LangGraph starts execution from the router.
+
+```text
+START
+  │
+  ▼
+Router
+  │
+  ├── Chat
+  ├── Search ──► Chat
+  ├── Coding
+  ├── PDF Generator
+  ├── PPT Generator
+  ├── Image Generator
+  ├── PDF RAG
+  └── Image Analyzer
+```
+
+### Automatic routing
+
+When `agent=auto`, an LLM classifies the prompt.
+
+Examples:
+
+```text
+"Explain how Kafka works"
+        ↓
+      Chat
+```
+
+```text
+"What happened in AI news today?"
+        ↓
+      Search
+```
+
+```text
+"Build a responsive portfolio website"
+        ↓
+      Coding
+```
+
+```text
+"Create a PDF explaining microservices"
+        ↓
+       PDF
+```
+
+### File-aware routing
+
+Uploaded files override normal intent routing.
+
+```text
+PDF Upload
+   ↓
+PDF RAG Agent
+```
+
+```text
+Image Upload
+   ↓
+Image Analyzer
+```
+
+This avoids unnecessary router calls and ensures the correct multimodal pipeline is used.
+
+---
+
+# 💬 Chat Agent
+
+The Chat Agent handles:
+
+* General conversation
+* Technical questions
+* Educational questions
+* Explanations
+* Follow-up questions
+* Search-result synthesis
+
+Conversation context is loaded from Redis before each LLM request.
+
+```text
+User Prompt
+     ↓
+Load Conversation Memory
+     ↓
+Build LangChain Messages
+     ↓
+LLM
+     ↓
+Assistant Response
+```
+
+When Redis does not already contain conversation history, history can be restored from persisted messages.
+
+This provides a combination of:
+
+```text
+MongoDB → persistent history
+
+Redis → fast conversational context
+```
+
+---
+
+# 🌐 Real-Time Web Search
+
+Questions requiring current information can be routed to the Search Agent.
+
+The system uses **Tavily Search**.
+
+```text
+User Query
+     ↓
+Search Agent
+     ↓
+Tavily
+     ↓
+Top Search Results + Images
+     ↓
+Chat Agent
+     ↓
+LLM Synthesis
+     ↓
+Final Answer
+```
+
+The search agent retrieves up to **5 results** and can also return relevant images.
+
+Search results are then provided as context to the Chat Agent instead of returning raw search data directly.
+
+This creates a basic tool-augmented AI workflow where:
+
+```text
+Search Agent = information retrieval
+
+Chat Agent = reasoning + response generation
+```
+
+---
+
+# 📄 PDF Retrieval-Augmented Generation
+
+Uploading a PDF automatically invokes the **PDF RAG Agent**.
+
+The complete pipeline is:
+
+```text
+PDF Upload
+    ↓
+Multer
+    ↓
+Temporary File
+    ↓
+pdf-parse
+    ↓
+Extract Text
+    ↓
+RecursiveCharacterTextSplitter
+    ↓
+Text Chunks
+    ↓
+Gemini Embeddings
