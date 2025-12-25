@@ -343,3 +343,175 @@ RecursiveCharacterTextSplitter
 Text Chunks
     ↓
 Gemini Embeddings
+    ↓
+Qdrant
+    ↓
+Similarity Search
+    ↓
+Top 5 Relevant Chunks
+    ↓
+LLM
+    ↓
+Grounded Answer
+```
+
+## Chunking Strategy
+
+Documents are split using:
+
+```text
+Chunk size:    1000 characters
+Chunk overlap: 200 characters
+```
+
+Overlap helps preserve context across chunk boundaries.
+
+---
+
+## Embeddings
+
+VisionAI currently uses:
+
+```text
+gemini-embedding-001
+```
+
+through LangChain's Google Generative AI integration.
+
+The resulting vectors are stored in **Qdrant**.
+
+---
+
+## Retrieval
+
+For every PDF question:
+
+```text
+similaritySearch(question, 5)
+```
+
+retrieves the five most relevant document chunks.
+
+The retrieved chunks are combined into context for the LLM.
+
+---
+
+## Hallucination Control
+
+The PDF assistant is explicitly instructed to:
+
+* answer only from retrieved PDF context;
+* avoid inventing unsupported information;
+* clearly state when requested information cannot be found.
+
+Conceptually:
+
+```text
+Question
+   +
+Retrieved Evidence
+   ↓
+LLM
+   ↓
+Grounded Response
+```
+
+This is substantially safer than sending a full large document directly to an LLM.
+
+---
+
+# 🖼️ Image Analysis
+
+Users can upload images directly in the chat interface.
+
+Accepted uploads include:
+
+```text
+image/png
+image/jpeg
+image/webp
+...
+```
+
+The image is converted to Base64 and passed to a multimodal **Gemini** model.
+
+The Image Analyzer can:
+
+* describe images;
+* answer questions about an image;
+* extract visible text;
+* interpret charts;
+* interpret tables;
+* explain visual information.
+
+The prompt also instructs the model to acknowledge unclear information instead of fabricating details.
+
+---
+
+# 🎨 Image Generation
+
+The Vision Agent converts a normal user request into a detailed image-generation prompt.
+
+Example:
+
+```text
+User:
+"Generate a futuristic city at night"
+
+        ↓
+
+LLM Prompt Enhancement
+
+        ↓
+
+Detailed Image Prompt
+
+        ↓
+
+Pollinations Image API
+
+        ↓
+
+Generated Image
+
+        ↓
+
+Amazon S3
+
+        ↓
+
+Downloadable URL
+```
+
+Generated images are uploaded to S3 and returned to the frontend through a presigned URL.
+
+---
+
+# 💻 Coding Agent
+
+The Coding Agent first determines what type of coding task the user wants.
+
+Supported intent categories include:
+
+```text
+CODE_GENERATION
+CODE_REVIEW
+CODE_EXPLANATION
+DEBUGGING
+OPTIMIZATION
+CONVERSION
+DOCUMENTATION
+```
+
+---
+
+## Project Generation
+
+When the intent is `CODE_GENERATION`, the LLM generates structured project files.
+
+The default generated web stack is:
+
+```text
+HTML
+CSS
+JavaScript
