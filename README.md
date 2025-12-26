@@ -515,3 +515,175 @@ The default generated web stack is:
 HTML
 CSS
 JavaScript
+```
+
+React, Next.js, Vue, or other frameworks can be generated when explicitly requested.
+
+The model returns structured JSON:
+
+```json
+{
+  "files": [
+    {
+      "name": "index.html",
+      "content": "..."
+    },
+    {
+      "name": "style.css",
+      "content": "..."
+    },
+    {
+      "name": "script.js",
+      "content": "..."
+    }
+  ]
+}
+```
+
+These files are returned as an **artifact** rather than being mixed into the normal assistant response.
+
+---
+
+# 🖥️ Interactive Code Artifacts
+
+Generated projects are displayed in a separate artifact panel.
+
+The frontend uses:
+
+```text
+@monaco-editor/react
+```
+
+to provide a VS Code-like code viewing experience.
+
+Features include:
+
+* multiple generated files;
+* syntax-aware editor;
+* copy-to-clipboard;
+* collapsible artifact panel;
+* responsive mobile artifact drawer;
+* automatic language detection;
+* code/preview switching.
+
+---
+
+## Live Preview
+
+When generated artifacts contain:
+
+```text
+index.html
+style.css
+script.js
+```
+
+the frontend combines them into an HTML document and renders it inside a sandboxed iframe.
+
+```text
+Generated Files
+      ↓
+Build Preview Document
+      ↓
+Sandboxed iframe
+      ↓
+Live Application Preview
+```
+
+This allows users to immediately inspect generated websites without leaving VisionAI.
+
+---
+
+# 📑 AI PDF Generation
+
+VisionAI can also create PDFs rather than only analyze them.
+
+```text
+User Topic
+    ↓
+LLM
+    ↓
+Structured JSON
+    ↓
+PDFKit
+    ↓
+PDF Buffer
+    ↓
+Amazon S3
+    ↓
+Presigned Download URL
+```
+
+The LLM generates structured content containing:
+
+```text
+title
+subtitle
+sections
+bullet points
+```
+
+The backend then converts this structure into an actual PDF file using **PDFKit**.
+
+---
+
+# 📊 AI PowerPoint Generation
+
+The PPT Agent follows a similar workflow.
+
+```text
+User Topic
+    ↓
+LLM
+    ↓
+Structured Presentation JSON
+    ↓
+PptxGenJS
+    ↓
+PPTX Buffer
+    ↓
+Amazon S3
+    ↓
+Download URL
+```
+
+The current implementation generates a structured presentation containing **six content slides**, with concise bullet points for each slide.
+
+---
+
+# 🎙️ Voice Input
+
+VisionAI supports speech input through the browser's Speech Recognition API.
+
+Users can:
+
+1. activate the microphone;
+2. speak their prompt;
+3. view live transcription;
+4. send the transcribed text directly to an AI agent.
+
+This functionality runs client-side and does not require a separate speech service.
+
+---
+
+# 🔐 Authentication Architecture
+
+VisionAI uses **Firebase Authentication** for identity verification.
+
+The frontend currently supports Google sign-in.
+
+```text
+Google Sign-In
+     ↓
+Firebase Client SDK
+     ↓
+Firebase ID Token
+     ↓
+POST /api/auth/login
+     ↓
+Firebase Admin Verification
+     ↓
+Find/Create MongoDB User
+     ↓
+Generate Session ID
+     ↓
