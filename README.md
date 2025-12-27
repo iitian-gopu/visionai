@@ -687,3 +687,175 @@ Find/Create MongoDB User
      ↓
 Generate Session ID
      ↓
+Store Session in Redis
+     ↓
+HTTP-only Cookie
+```
+
+---
+
+## Session Management
+
+Instead of repeatedly verifying Firebase tokens for every backend request, VisionAI creates an application session.
+
+Sessions are stored as:
+
+```text
+session-{sessionId}
+```
+
+inside Redis.
+
+The session contains information such as:
+
+```text
+userId
+name
+email
+avatar
+plan
+credits
+totalCredits
+planExpiresAt
+```
+
+The browser receives the session ID through an **HTTP-only cookie**.
+
+Protected routes are therefore authenticated through:
+
+```text
+Cookie
+   ↓
+API Gateway
+   ↓
+Redis Session Lookup
+   ↓
+Authenticated User
+```
+
+---
+
+# 🚪 API Gateway
+
+The Gateway acts as the primary backend entry point.
+
+It proxies requests to individual microservices:
+
+```text
+/api/auth
+      ↓
+Auth Service
+
+/api/chat
+      ↓
+Chat Service
+
+/api/agent
+      ↓
+Agent Service
+
+/api/billing
+      ↓
+Billing Service
+```
+
+Protected routes pass through authentication middleware before being forwarded.
+
+The gateway also injects authenticated user context into requests sent to downstream services.
+
+This means microservices do not need to independently decode browser sessions.
+
+---
+
+# 💬 Conversation Persistence
+
+VisionAI stores conversations and messages using MongoDB.
+
+A conversation contains the user relationship and conversation metadata.
+
+Messages support:
+
+```text
+role
+content
+conversationId
+images
+artifacts
+```
+
+This means generated code projects and image/search results can remain associated with the original conversation.
+
+Users can:
+
+* create conversations;
+* list previous conversations;
+* reopen a conversation;
+* rename conversation titles;
+* retrieve historical messages.
+
+---
+
+# 🧠 Conversation Memory
+
+Persistent conversation storage and active LLM context are intentionally separated.
+
+### MongoDB
+
+Used for:
+
+```text
+long-term conversation persistence
+```
+
+### Redis
+
+Used for:
+
+```text
+fast recent-message retrieval
+```
+
+The active conversational memory retains a bounded recent message window before prompts are sent to the LLM.
+
+This prevents prompt history from growing indefinitely.
+
+---
+
+# 💳 Credit & Billing System
+
+VisionAI includes a credit-based AI usage system.
+
+Different operations consume different amounts of credits.
+
+Current backend configuration:
+
+| Agent  | Credits |
+| ------ | ------: |
+| Chat   |       1 |
+| Search |       5 |
+| Coding |      10 |
+| PDF    |      10 |
+| PPT    |      10 |
+| Vision |      10 |
+
+Credits are deducted after successful AI operations.
+
+---
+
+# 💰 Plans
+
+The current billing configuration contains:
+
+| Plan    | Price | Credits | Validity |
+| ------- | ----: | ------: | -------: |
+| Free    |    ₹0 |     100 |  30 days |
+| Starter |  ₹199 |     500 |  30 days |
+| Pro     |  ₹499 |    1000 |  30 days |
+
+Pricing is configuration-driven and can be changed without altering the frontend architecture.
+
+---
+
+# 💵 Razorpay Payment Flow
+
+```text
