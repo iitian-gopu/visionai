@@ -1032,3 +1032,175 @@ visionai/
 │   ├── services/
 │   │   │
 │   │   ├── auth/
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   ├── routes/
+│   │   │   ├── Dockerfile
+│   │   │   └── index.js
+│   │   │
+│   │   ├── chat/
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── models/
+│   │   │   ├── routes/
+│   │   │   ├── Dockerfile
+│   │   │   └── index.js
+│   │   │
+│   │   ├── agent/
+│   │   │   ├── agents/
+│   │   │   │   ├── chat.agent.js
+│   │   │   │   ├── coding.agent.js
+│   │   │   │   ├── imageAnalyzer.agent.js
+│   │   │   │   ├── pdf.agent.js
+│   │   │   │   ├── pdfRag.agent.js
+│   │   │   │   ├── ppt.agent.js
+│   │   │   │   ├── search.agent.js
+│   │   │   │   └── vision.agent.js
+│   │   │   │
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── graph/
+│   │   │   │   ├── graph.js
+│   │   │   │   ├── router.js
+│   │   │   │   └── state.js
+│   │   │   ├── routes/
+│   │   │   ├── utils/
+│   │   │   ├── Dockerfile
+│   │   │   └── index.js
+│   │   │
+│   │   └── billing/
+│   │       ├── config/
+│   │       ├── controllers/
+│   │       ├── models/
+│   │       ├── routes/
+│   │       ├── Dockerfile
+│   │       └── index.js
+│   │
+│   └── shared/
+│       └── redis/
+│           └── redis.js
+│
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   │   ├── Artifact.jsx
+    │   │   ├── BillingDrawer.jsx
+    │   │   ├── ChatArea.jsx
+    │   │   ├── ChatInput.jsx
+    │   │   ├── MessageBubble.jsx
+    │   │   ├── MessageList.jsx
+    │   │   ├── Nav.jsx
+    │   │   └── SideBar.jsx
+    │   │
+    │   ├── features/
+    │   ├── pages/
+    │   ├── redux/
+    │   ├── App.jsx
+    │   └── main.jsx
+    │
+    ├── utils/
+    │   ├── axios.js
+    │   └── firebase.js
+    │
+    ├── package.json
+    └── vite.config.js
+```
+
+---
+
+# 🔌 Main API Endpoints
+
+All normal client traffic should go through the API Gateway.
+
+## Authentication
+
+```http
+POST /api/auth/login
+GET  /api/auth/logout
+GET  /api/me
+```
+
+---
+
+## Conversations
+
+```http
+GET  /api/chat/create-conversation
+GET  /api/chat/get-conversations
+POST /api/chat/update-conversation
+GET  /api/chat/get-messages/:conversationId
+```
+
+---
+
+## AI Agent
+
+```http
+POST /api/agent/chat
+```
+
+The endpoint accepts `multipart/form-data`.
+
+Example fields:
+
+```text
+prompt
+conversationId
+agent
+file (optional)
+```
+
+Example:
+
+```bash
+curl -X POST http://localhost:8000/api/agent/chat \
+  -F "prompt=Explain Kubernetes" \
+  -F "conversationId=<conversation-id>" \
+  -F "agent=auto"
+```
+
+Authenticated session cookies are required when accessing the endpoint through the gateway.
+
+---
+
+## Billing
+
+```http
+POST /api/billing/create
+POST /api/billing/verify
+```
+
+---
+
+# 🚀 Getting Started
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/iitian-gopu/visionai.git
+cd visionai
+```
+
+---
+
+# 📦 Backend Installation
+
+Install shared backend dependencies:
+
+```bash
+cd backend
+npm install
+```
+
+Install dependencies for every service:
+
+```bash
+cd gateway
+npm install
+
+cd ../services/auth
+npm install
+
+cd ../chat
+npm install
