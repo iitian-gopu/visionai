@@ -859,3 +859,176 @@ Pricing is configuration-driven and can be changed without altering the frontend
 # 💵 Razorpay Payment Flow
 
 ```text
+User Selects Plan
+      ↓
+Frontend
+      ↓
+POST /api/billing/create
+      ↓
+Billing Service
+      ↓
+Razorpay Order
+      ↓
+User Completes Payment
+      ↓
+POST /api/billing/verify
+      ↓
+HMAC Signature Verification
+      ↓
+Payment Marked Paid
+      ↓
+Auth Service
+      ↓
+User Plan + Credits Updated
+```
+
+Payment records are persisted separately from user records.
+
+The backend verifies Razorpay signatures using HMAC-SHA256 before granting credits.
+
+---
+
+# ⚡ Rate Limiting
+
+Rate limiting is implemented using Redis counters.
+
+Current limits:
+
+| Agent  | Requests / Minute |
+| ------ | ----------------: |
+| Chat   |                20 |
+| Search |                 5 |
+| Coding |                 5 |
+| PDF    |                 5 |
+| PPT    |                 5 |
+| Image  |                 5 |
+
+Rate-limit keys are scoped by both user and agent:
+
+```text
+rate:{userId}:{agent}
+```
+
+This prevents one AI capability from consuming the entire limit of another.
+
+---
+
+# 📎 File Upload Security
+
+The upload layer accepts only:
+
+```text
+PDF files
+Image files
+```
+
+Maximum file size:
+
+```text
+20 MB
+```
+
+Files are stored temporarily while they are being processed and removed after PDF/image analysis.
+
+---
+
+# 🧰 Technology Stack
+
+## Frontend
+
+| Technology          | Purpose                  |
+| ------------------- | ------------------------ |
+| React 19            | UI                       |
+| Vite                | Build tooling            |
+| Redux Toolkit       | Global state             |
+| Tailwind CSS        | Styling                  |
+| Motion              | UI animations            |
+| Axios               | API requests             |
+| Firebase Client SDK | Google authentication    |
+| Monaco Editor       | Generated code viewer    |
+| React Markdown      | AI response rendering    |
+| Remark GFM          | GitHub-flavored Markdown |
+| Lucide React        | Icons                    |
+
+---
+
+## Backend
+
+| Technology      | Purpose                          |
+| --------------- | -------------------------------- |
+| Node.js         | Runtime                          |
+| Express.js 5    | REST services                    |
+| LangChain       | LLM abstractions                 |
+| LangGraph       | Multi-agent orchestration        |
+| MongoDB         | Persistent application data      |
+| Mongoose        | MongoDB ODM                      |
+| Redis / ioredis | Sessions, memory and rate limits |
+| Multer          | File uploads                     |
+| Axios           | Inter-service/API calls          |
+
+---
+
+## AI / Retrieval
+
+| Technology               | Purpose                        |
+| ------------------------ | ------------------------------ |
+| Groq                     | Default LLM execution          |
+| OpenRouter               | Coding model access            |
+| DeepSeek                 | Coding model                   |
+| Google Gemini            | Multimodal image understanding |
+| Gemini Embeddings        | PDF embeddings                 |
+| Qdrant                   | Vector database                |
+| Tavily                   | Web search                     |
+| Pollinations             | Image generation               |
+| pdf-parse                | PDF text extraction            |
+| LangChain Text Splitters | RAG chunking                   |
+
+---
+
+## Documents
+
+| Technology | Purpose                    |
+| ---------- | -------------------------- |
+| PDFKit     | PDF generation             |
+| PptxGenJS  | PowerPoint generation      |
+| Amazon S3  | Generated artifact storage |
+
+---
+
+## Infrastructure
+
+| Technology     | Purpose                   |
+| -------------- | ------------------------- |
+| Docker         | Service containerization  |
+| Amazon ECR     | Container registry        |
+| Amazon ECS     | Backend deployment        |
+| Amazon S3      | Frontend/artifact storage |
+| CloudFront     | Frontend CDN              |
+| GitHub Actions | Automated deployment      |
+
+---
+
+# 📁 Repository Structure
+
+```text
+visionai/
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+│
+├── backend/
+│   │
+│   ├── docker-compose.yml
+│   ├── package.json
+│   │
+│   ├── gateway/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── utils/
+│   │   ├── Dockerfile
+│   │   └── index.js
+│   │
+│   ├── services/
+│   │   │
+│   │   ├── auth/
