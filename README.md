@@ -1204,3 +1204,175 @@ npm install
 
 cd ../chat
 npm install
+
+cd ../agent
+npm install
+
+cd ../billing
+npm install
+```
+
+---
+
+# 🖥️ Frontend Installation
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+# 🐳 Start Redis
+
+A lightweight Docker Compose configuration is already included.
+
+From the project root:
+
+```bash
+docker compose -f backend/docker-compose.yml up -d
+```
+
+Redis will be available at:
+
+```text
+redis://localhost:6379
+```
+
+---
+
+# ⚙️ Environment Variables
+
+The services use separate environment configurations.
+
+Never commit real `.env` files, API keys, AWS credentials, Razorpay secrets, or Firebase Admin credentials.
+
+---
+
+## API Gateway
+
+Example:
+
+```env
+PORT=8000
+
+FRONTEND_URL=http://localhost:5173
+
+AUTH_SERVICE=http://localhost:8001
+CHAT_SERVICE=http://localhost:8002
+AGENT_SERVICE=http://localhost:8003
+BILLING_SERVICE=http://localhost:8004
+
+REDIS_URL=redis://localhost:6379
+```
+
+---
+
+## Auth Service
+
+```env
+PORT=8001
+
+MONGODB_URI=mongodb://localhost:27017/visionai
+
+REDIS_URL=redis://localhost:6379
+```
+
+Firebase Admin also expects:
+
+```text
+backend/services/auth/serviceAccountKey.json
+```
+
+Download a Firebase Admin service-account credential from your Firebase project and place it at the expected path.
+
+`serviceAccountKey.json` is ignored by the repository's `.gitignore`.
+
+---
+
+## Chat Service
+
+```env
+PORT=8002
+
+MONGODB_URI=mongodb://localhost:27017/visionai
+```
+
+---
+
+## Agent Service
+
+```env
+PORT=8003
+
+MONGODB_URI=mongodb://localhost:27017/visionai
+REDIS_URL=redis://localhost:6379
+
+CHAT_SERVICE=http://localhost:8002
+AUTH_SERVICE=http://localhost:8001
+
+QDRANT_URL=http://localhost:6333
+
+GROQ_API_KEY=your_groq_api_key
+GOOGLE_API_KEY=your_google_ai_api_key
+OPENROUTER_API_KEY=your_openrouter_api_key
+TAVILY_API_KEY=your_tavily_api_key
+
+AWS_REGION=your_aws_region
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_KEY=your_secret_key
+AWS_BUCKET_NAME=your_artifact_bucket
+```
+
+---
+
+## Billing Service
+
+```env
+PORT=8004
+
+MONGODB_URI=mongodb://localhost:27017/visionai
+
+AUTH_SERVICE=http://localhost:8001
+
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+```
+
+---
+
+## Frontend
+
+Create:
+
+```text
+frontend/.env
+```
+
+and add:
+
+```env
+VITE_SERVER_URL=http://localhost:8000
+
+VITE_FIREBASE_API_KEY=your_firebase_web_api_key
+```
+
+The Firebase project configuration is initialized inside:
+
+```text
+frontend/utils/firebase.js
+```
+
+---
+
+# ▶️ Running the Application
+
+The backend is composed of independent services.
+
+Open separate terminals.
+
+### Auth
+
+```bash
+cd backend/services/auth
+npm start
