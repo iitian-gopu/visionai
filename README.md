@@ -1376,3 +1376,175 @@ Open separate terminals.
 ```bash
 cd backend/services/auth
 npm start
+```
+
+### Chat
+
+```bash
+cd backend/services/chat
+npm start
+```
+
+### Agent
+
+```bash
+cd backend/services/agent
+npm start
+```
+
+### Billing
+
+```bash
+cd backend/services/billing
+npm start
+```
+
+### Gateway
+
+```bash
+cd backend/gateway
+npm start
+```
+
+The intended service topology uses:
+
+```text
+Gateway  → 8000
+Auth     → 8001
+Chat     → 8002
+Agent    → 8003
+Billing  → 8004
+```
+
+---
+
+## Start Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Vite will normally start the frontend at:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🔄 Complete Request Flow
+
+A typical AI conversation follows this path:
+
+```text
+1. User sends message
+
+2. React creates/uses conversation
+
+3. Request reaches API Gateway
+
+4. Gateway verifies Redis session
+
+5. Gateway forwards authenticated user ID
+
+6. Agent Service persists user message
+
+7. LangGraph starts workflow
+
+8. Router selects specialized agent
+
+9. Agent checks Redis rate limit
+
+10. Agent loads required context/tools
+
+11. LLM/tool generates response
+
+12. Credits are deducted
+
+13. Recent memory is updated in Redis
+
+14. Final assistant message is persisted
+
+15. Response returns to frontend
+
+16. React displays text/images/artifacts
+
+17. Code artifacts open in Monaco + Preview panel
+```
+
+---
+
+# ☁️ AWS Deployment Architecture
+
+The repository includes a GitHub Actions deployment workflow triggered by pushes to:
+
+```text
+main
+```
+
+---
+
+## Backend Deployment
+
+For each backend service:
+
+```text
+Git Push
+   ↓
+GitHub Actions
+   ↓
+Docker Build
+   ↓
+Amazon ECR
+   ↓
+Amazon ECS
+   ↓
+Force New Deployment
+```
+
+Separate container images are built for:
+
+```text
+gateway
+auth-service
+chat-service
+agent-service
+billing-service
+```
+
+This allows services to be deployed and scaled independently at the infrastructure level.
+
+---
+
+# 🌍 Frontend Deployment
+
+Frontend deployment follows:
+
+```text
+GitHub Actions
+      ↓
+npm install
+      ↓
+Vite Production Build
+      ↓
+Amazon S3
+      ↓
+CloudFront
+      ↓
+Cache Invalidation
+```
+
+The deployment pipeline automatically runs after successful backend deployment.
+
+---
+
+# 🔑 GitHub Actions Secrets
+
+The current deployment workflow expects secrets/configuration including:
+
+```text
+AWS_REGION
+AWS_ACCOUNT_ID
+AWS_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY
