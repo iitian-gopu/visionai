@@ -1548,3 +1548,175 @@ AWS_REGION
 AWS_ACCOUNT_ID
 AWS_ACCESS_KEY
 AWS_SECRET_ACCESS_KEY
+
+ECS_CLUSTER
+
+GATEWAY_SERVICE
+AUTH_SERVICE
+CHAT_SERVICE
+AGENT_SERVICE
+BILLING_SERVICE
+
+S3_BUCKET
+CLOUDFRONT_DISTRIBUTION_ID
+```
+
+Keep production credentials exclusively in GitHub Actions secrets or a dedicated secrets-management platform.
+
+---
+
+# 🛡️ Security Considerations
+
+The architecture includes several security-focused design choices:
+
+### Authentication
+
+Firebase ID tokens are verified server-side before application sessions are created.
+
+### HTTP-only Sessions
+
+Session IDs are stored in HTTP-only cookies instead of exposing application session credentials directly to frontend JavaScript.
+
+### Redis Session Validation
+
+Protected gateway requests are validated against Redis.
+
+### Service Isolation
+
+The API Gateway acts as the public entry point while backend responsibilities remain separated.
+
+### Payment Verification
+
+Razorpay payment signatures are cryptographically verified before credits are granted.
+
+### Upload Filtering
+
+Only PDFs and images are accepted by the AI upload endpoint.
+
+### File Size Limits
+
+Uploads are capped at 20 MB.
+
+### Grounded PDF Answers
+
+The PDF agent is instructed to answer from retrieved document evidence rather than inventing unsupported responses.
+
+### Secrets
+
+Environment files, Firebase service-account files, PEM files and other sensitive local files are excluded through `.gitignore`.
+
+---
+
+# 📈 Scalability Design
+
+The project already separates major responsibilities into independently deployable services:
+
+```text
+Gateway
+Auth
+Chat
+Agent
+Billing
+```
+
+This makes it possible to scale expensive workloads separately.
+
+For example:
+
+```text
+High AI traffic
+      ↓
+Scale Agent Service
+
+High conversation traffic
+      ↓
+Scale Chat Service
+
+High authentication traffic
+      ↓
+Scale Auth Service
+```
+
+Redis reduces repeated database access for session and conversational-memory operations, while Qdrant provides vector similarity search without requiring semantic retrieval to be implemented directly inside MongoDB.
+
+AWS ECS provides container-level scaling for backend workloads, while S3 + CloudFront serve the frontend independently from the API tier.
+
+---
+
+# 🔮 Potential Improvements
+
+The current architecture provides a strong foundation for further development.
+
+Possible extensions include:
+
+* streaming LLM responses with SSE or WebSockets;
+* background job processing for large document operations;
+* persistent document workspaces instead of one-upload RAG collections;
+* Qdrant collection lifecycle management;
+* support for multiple files per knowledge base;
+* citations linking RAG responses to PDF pages;
+* hybrid lexical + vector retrieval;
+* reranking retrieved chunks before generation;
+* conversation summarization for very long chats;
+* token-aware memory management;
+* additional agent tools;
+* agent execution tracing;
+* OpenTelemetry observability;
+* Prometheus metrics;
+* centralized structured logging;
+* automated unit/integration tests;
+* full local-stack Docker Compose;
+* infrastructure-as-code with Terraform/CDK;
+* Kubernetes deployment support;
+* async task queues for document generation;
+* model fallback and circuit-breaker strategies;
+* per-tenant vector collections;
+* enterprise RBAC;
+* usage analytics dashboards.
+
+---
+
+# 🎯 What This Project Demonstrates
+
+VisionAI demonstrates several production-oriented AI engineering concepts in one application:
+
+* multi-agent architecture;
+* LLM-based intent routing;
+* LangGraph orchestration;
+* Retrieval-Augmented Generation;
+* vector databases;
+* multimodal LLM usage;
+* external tool integration;
+* multi-model routing;
+* conversational memory;
+* prompt grounding;
+* full-stack AI product development;
+* microservice architecture;
+* REST API design;
+* authentication and session management;
+* payment integration;
+* rate limiting;
+* usage-based credit systems;
+* Docker containerization;
+* cloud deployment;
+* automated deployment pipelines.
+
+---
+
+# 👨‍💻 Author
+
+**Gopal Jaiswal**
+
+GitHub: [@iitian-gopu](https://github.com/iitian-gopu)
+
+Email: [gopaljaiswal20192023@gmail.com](mailto:gopaljaiswal20192023@gmail.com)
+
+Repository: [iitian-gopu/visionai](https://github.com/iitian-gopu/visionai)
+
+---
+
+## ⭐ Support
+
+If you find VisionAI useful or interesting, consider giving the repository a ⭐.
+
+Contributions, suggestions and improvements are welcome.
